@@ -1,0 +1,22 @@
+SET SERVEROUTPUT ON
+DECLARE
+    CURSOR c_bairro_cliente IS
+    SELECT C.ID_CLIENTE,
+       C.NM_CLIENTE,
+       E.NR_CEP,
+       E.ST_ENDERECO,
+       E.NM_BAIRRO
+    FROM T_CLIENTE C
+    INNER JOIN T_ENDERECO_CLIENTE E ON (C.ID_CLIENTE = E.ID_CLIENTE)
+    WHERE (C.ID_CLIENTE > 0) AND E.ST_ENDERECO = 'A' AND E.NM_BAIRRO = 'Brás'
+    GROUP BY C.ID_CLIENTE, C.NM_CLIENTE, E.NR_CEP, E.ST_ENDERECO, E.NM_BAIRRO;
+
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Clientes com o Status de endereço ativo e que moram no bairro "Brás": ');
+    DBMS_OUTPUT.PUT_LINE('-----------------------------------------------------------------------');
+    FOR i IN c_bairro_cliente LOOP
+        DBMS_OUTPUT.PUT_LINE('Cliente: ' || i.NM_CLIENTE || ', CEP: ' || i.NR_CEP || ', Status do endereço: ' || i.ST_ENDERECO);
+        DBMS_OUTPUT.PUT_LINE('-----------------------------------------------------------------------');
+    END LOOP;
+
+END;
